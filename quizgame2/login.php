@@ -1,3 +1,38 @@
+<?php
+
+  require "database.php";
+
+  $error = null;
+
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["username"]) || empty($_POST["password"])) {
+      $error = "Please fill all the fields.";
+    } else {
+      $statement = $conn->prepare("SELECT * FROM account WHERE username = :username LIMIT 1");
+      $statement->bindParam(":username", $_POST["username"]);
+      $statement->execute();
+
+      if ($statement->rowCount() == 0) {
+        $error = "Invalid credentials.";
+      } else {
+        $account = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (isset($account["password"]) && !password_verify($_POST["password"], $account["password"])) {
+          $error = "Invalid credentials.";
+        } else {
+          session_start();
+
+          unset($account["password"]);
+
+          $_SESSION["account"] = $account;
+
+          header("Location: home.php");
+        }
+      }
+    }
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +123,30 @@
         input::placeholder {
             font-size: 16px;
         }
+        .error-container {
+            position: absolute;
+            bottom: 20%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .error-message {
+            background-color: 	 #ee4466;
+            border: 2px solid black;
+            float: left;
+            padding: 20px 30px;
+            top: 80%;
+            text-align: center;
+        }
+        .error-message p {
+            color: black;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+            font-size: 18px;
+            font-weight: bolder;
+            line-height: 20px;
+            text-shadow: 1px 1px rgba(250,250,250,.3);
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -96,11 +155,18 @@
             <img src="static/img/logo.png" alt="Logo">
         </div>
         <h1>Retro-Quiz</h1>
-        <form action="login.php" method="post">
+        <form method="POST" action="login.php">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <a href="home.php" class="login-button">Login</a>
+            <button type="submit" class="login-button">Login</button>
         </form>
     </div>
+    <?php if ($error): ?>
+        <div class="error-container">
+            <div class="error-message">
+                <p><?= $error ?></p>
+            </div>
+        </div>
+    <?php endif ?>
 </body>
 </html>
