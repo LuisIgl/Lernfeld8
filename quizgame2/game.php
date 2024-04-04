@@ -2,7 +2,6 @@
 require "database.php";
 session_start();
 
-// Obtener todas las preguntas y respuestas de la categoría
 if(isset($_GET['category_name'])) {
     $category_name = $_GET['category_name'];
 
@@ -18,7 +17,6 @@ if(isset($_GET['category_name'])) {
 
         $questions = $statement_questions->fetchAll(PDO::FETCH_ASSOC);
 
-        // Obtener todas las respuestas para cada pregunta
         $answers = array();
         foreach($questions as $question) {
             $statement_answers = $conn->prepare("SELECT * FROM antworten WHERE FragenNr = ?");
@@ -26,7 +24,6 @@ if(isset($_GET['category_name'])) {
             $answers[$question['FragenNr']] = $statement_answers->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        // Almacenar el número total de preguntas
         $total_questions = count($questions);
     } else {
         $questions = [];
@@ -39,7 +36,6 @@ if(isset($_GET['category_name'])) {
     $total_questions = 0;
 }
 
-// Obtener el índice de la pregunta actual
 $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 0;
 ?>
 
