@@ -6,7 +6,7 @@
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["username"]) || empty($_POST["password"])) {
-      $error = "Please fill all the fileds.";
+      $error = "Please fill all the fields.";
     } else {
       $statement = $conn->prepare("SELECT * FROM account WHERE username = :username");
       $statement->bindParam(":username", $_POST["username"]);
@@ -28,9 +28,13 @@
           $user = $statement->fetch(PDO::FETCH_ASSOC);
 
           session_start();
-          $_SESSION["user"] = $user;
+          
+          unset($user["Password"]);
+          
+          $_SESSION["account"] = $user;
 
-          header("Location: login.php");
+          header("Location: home.php");
+
       }
     }
   }
@@ -78,8 +82,8 @@
             color: black;
             border-top: 2px solid black;
             border-bottom: 2px solid black;
-            border-left: 2px solid rgba(0, 0, 0, 0.2);
-            border-right: 6px solid rgba(0, 0, 0, 0.5); 
+            border-left: 2px solid black;
+            border-right: 2px solid black;
             border-radius: 30px;
             padding: 10px 30px;
             font-size: 25px;
