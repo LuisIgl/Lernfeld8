@@ -41,8 +41,8 @@
             color: black;
             border-top: 2px solid black;
             border-bottom: 2px solid black;
-            border-left: 2px solid rgba(0, 0, 0, 0.2);
-            border-right: 6px solid rgba(0, 0, 0, 0.5);
+            border-left: 2px solid black;
+            border-right: 2px solid black;
             border-radius: 30px;
             padding: 10px 30px;
             font-size: 25px;
