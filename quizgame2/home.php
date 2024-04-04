@@ -78,6 +78,12 @@ $statement->execute();
             justify-content: center;
             align-items: center;
         }
+        .button:hover {
+            background-color: #75bed5;
+            color: black;
+            border-color: black;
+            cursor: pointer;
+        }
 
         .button-container {
             display: flex;
@@ -110,20 +116,16 @@ $statement->execute();
         <div class="category">Choose your category</div>
     </div>
     <div class="button-container">
-        <?php
+    <?php
         if ($statement->rowCount() == 0) {
             echo "keine Kategorien verfügbar.";
         } else {
-           
             while ($categories = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $categoryName = $categories['Kategorie'];
-                $categoryID = $categories['KategorieNr'];
                 echo "<a href='game.php?category_name=$categoryName'><div class='button'>$categoryName</div></a>";
             }
-            $kategorien[] = $categoryName;
-            
         }
-        ?>
+    ?>
     </div>
 </body>
 </html>
