@@ -2,46 +2,54 @@
 require "database.php";
 session_start();
 
+// Obtener todas las preguntas y respuestas de la categoría
 if(isset($_GET['category_name'])) {
     $category_name = $_GET['category_name'];
 
-    $statement = $conn->prepare("SELECT * FROM kategorie WHERE Kategorie = ? LIMIT 1");
+    $statement = $conn->prepare("SELECT * FROM kategorie WHERE Kategorie = ?");
     $statement->execute([$category_name]);
     $category = $statement->fetch(PDO::FETCH_ASSOC);
 
     if($category) {
         $category_id = $category['KategorieNr'];
 
-        $statement_question = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ? LIMIT 1");
-        $statement_question->execute([$category_id]);
-    
-        $question = $statement_question->fetch(PDO::FETCH_ASSOC);
+        $statement_questions = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ?");
+        $statement_questions->execute([$category_id]);
 
-        if($question) {
-            $question_text = $question['Frage'];
+        $questions = $statement_questions->fetchAll(PDO::FETCH_ASSOC);
 
+        // Obtener todas las respuestas para cada pregunta
+        $answers = array();
+        foreach($questions as $question) {
             $statement_answers = $conn->prepare("SELECT * FROM antworten WHERE FragenNr = ?");
             $statement_answers->execute([$question['FragenNr']]);
-    
-            $answers = $statement_answers->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $question_text = "Keine Fragen für diese Kategorie gefunden.";
-            $answers = [];
+            $answers[$question['FragenNr']] = $statement_answers->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        // Almacenar el número total de preguntas
+        $total_questions = count($questions);
     } else {
-        $question_text = "Keine richtige Kategorie ausgewählt.";
+        $questions = [];
         $answers = [];
+        $total_questions = 0;
     }
 } else {
-    $question_text = "Keine Kategorie ausgewählt.";
+    $questions = [];
     $answers = [];
+    $total_questions = 0;
 }
+
+// Obtener el índice de la pregunta actual
+$currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <script>
+        var currentQuestion = <?php echo $currentQuestion; ?>;
+        var totalQuestions = <?php echo $total_questions; ?>;
+
         function selectAnswer(isCorrect, answerId) {
             var pointsElement = document.getElementById('points');
             var currentPoints = parseInt(pointsElement.textContent);
@@ -69,7 +77,35 @@ if(isset($_GET['category_name'])) {
 
             selectedButton.style.backgroundColor = isCorrect ? '#4CAF50' : '#FF3737';
 
-            document.getElementById('next-button-container').style.display = 'block';
+            if (currentQuestion < totalQuestions - 1) {
+                document.getElementById('next-button-container').style.display = 'block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+
+            var questionBox = document.getElementById('question-box');
+            questionBox.innerHTML = `
+                <div class="question">
+                    <?php echo $questions[$currentQuestion]['Frage']; ?>
+                </div>
+                <div class="answers-container">
+                    <?php foreach($answers[$questions[$currentQuestion]['FragenNr']] as $answer): ?>
+                        <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
+                            <?php echo $answer['Antwort']; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            `;
+
+            var questionStatus = document.querySelector('.fragen');
+            questionStatus.textContent = (currentQuestion + 1) + "/" + totalQuestions;
+
+            // Ocultar el botón Next si es la última pregunta
+            if (currentQuestion === totalQuestions - 1) {
+                document.getElementById('next-button-container').style.display = 'none';
+            }
         }
     </script>
     <meta charset="UTF-8">
@@ -198,9 +234,10 @@ if(isset($_GET['category_name'])) {
     <div class="logo">
         <img src="static/img/logo.png" alt="Logo">
     </div>
-    <div class="question-box">
+    <div class="question-box" id="question-box">
         <div class="question-status">
-            <div class="fragen">1/3</div>
+            <div class="fragen"><?php echo ($currentQuestion + 1) . "/" . $total_questions; ?></div>
+
             <div class="punkte" id="points">0</div>
         </div>
         <div class="category">
@@ -213,10 +250,10 @@ if(isset($_GET['category_name'])) {
             ?>
         </div>
         <div class="question">
-            <?php echo $question_text; ?>
+            <?php echo $questions[$currentQuestion]['Frage']; ?>
         </div>
         <div class="answers-container">
-            <?php foreach($answers as $answer): ?>
+            <?php foreach($answers[$questions[$currentQuestion]['FragenNr']] as $answer): ?>
                 <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
                     <?php echo $answer['Antwort']; ?>
                 </div>
@@ -225,8 +262,12 @@ if(isset($_GET['category_name'])) {
     </div>
 </div>        
         <div id="next-button-container" style="display: none;">
-            <a href="register.php" class="next-button">Next</a>
+                <?php if ($currentQuestion < $total_questions - 1): ?>
+                    <a href="game.php?category_name=<?php echo $category_name; ?>&currentQuestion=<?php echo $currentQuestion + 1; ?>" class="next-button">Next</a>
+                <?php else: ?>
+                    <span>Es gibt keine weitere Fragen.</span>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
 </body>
 </html>
