@@ -1,3 +1,13 @@
+<?php
+
+require "database.php";
+
+session_start();
+$statement = $conn->prepare("SELECT * FROM kategorie ORDER BY RAND() LIMIT 2");
+$statement->execute();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +96,9 @@
             width: 150px; 
             height: 150px;
         }
+        a {
+          text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -93,12 +106,24 @@
         <img src="static/img/logo.png" alt="Logo">
     </div>
     <div class="container">
-        <h1>Hi, YourName</h1>
+        <h1>Hi, <?php print_r($_SESSION["account"]["Username"]);?></h1>
         <div class="category">Choose your category</div>
     </div>
     <div class="button-container">
-        <div class="button">Random Category 1</div>
-        <div class="button">Random Category 2</div>
+        <?php
+        if ($statement->rowCount() == 0) {
+            echo "keine Kategorien verfügbar.";
+        } else {
+           
+            while ($categories = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $categoryName = $categories['Kategorie'];
+                $categoryID = $categories['KategorieNr'];
+                echo "<a href='game.php?category_name=$categoryName'><div class='button'>$categoryName</div></a>";
+            }
+            $kategorien[] = $categoryName;
+            
+        }
+        ?>
     </div>
 </body>
 </html>
