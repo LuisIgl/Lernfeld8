@@ -142,9 +142,9 @@ if(isset($_GET['category_name'])) {
             -webkit-text-stroke: 1px black;
         }
         .answer:hover {
-            background-color: #F0C419;
-            color: white;
-            border-color: #F0C419;
+            background-color: #f584b3;
+            color: black;
+            border-color: black;
             cursor: pointer;
         }
         .logo {
@@ -171,13 +171,13 @@ if(isset($_GET['category_name'])) {
           margin-left: 10px;
         }
 
-        .start-button {
+        .next-button {
             background-color: #ffe28a;
             color: black;
             border-top: 2px solid black;
             border-bottom: 2px solid black;
-            border-left: 2px solid rgba(0, 0, 0, 0.2);
-            border-right: 6px solid rgba(0, 0, 0, 0.5);
+            border-left: 2px solid black;
+            border-right: 2px solid black;
             border-radius: 30px;
             padding: 10px 30px;
             font-size: 25px;
@@ -187,46 +187,45 @@ if(isset($_GET['category_name'])) {
             font-weight: bold;
             margin-top: -2%;
         }
-        .start-button:hover {
+        .next-button:hover {
             background-color: darkred;
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <div class="game-container">
-                <div class="logo">
-                    <img src="static/img/logo.png" alt="Logo">
+    <div class="game-container">
+    <div class="logo">
+        <img src="static/img/logo.png" alt="Logo">
+    </div>
+    <div class="question-box">
+        <div class="question-status">
+            <div class="fragen">1/3</div>
+            <div class="punkte" id="points">0</div>
+        </div>
+        <div class="category">
+            <?php
+                if(isset($_GET['category_name'])) {
+                    echo $_GET['category_name'];
+                } else {
+                    echo "Es wurde keine Kategorie ausgewählt.";
+                }
+            ?>
+        </div>
+        <div class="question">
+            <?php echo $question_text; ?>
+        </div>
+        <div class="answers-container">
+            <?php foreach($answers as $answer): ?>
+                <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
+                    <?php echo $answer['Antwort']; ?>
                 </div>
-                    <div class="question-box">
-                        <div class="question-status">
-                            <div class="fragen">1/3</div>
-                            <div class="punkte" id="points">0</div>
-                        </div>
-                        <div class="category">
-                        <?php
-                            if(isset($_GET['category_name'])) {
-                                echo $_GET['category_name'];
-                            } else {
-                                echo "Es wurde keine Kategorie ausgewählt.";
-                            }
-                        ?>
-                        </div>
-                        <div class="question">
-                            <?php echo $question_text; ?>
-                        </div>
-                        <div class="answers-container">
-                            <?php foreach($answers as $answer): ?>
-                                <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
-                                    <?php echo $answer['Antwort']; ?>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-         </div>
-         
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>        
         <div id="next-button-container" style="display: none;">
-            <a href="register.php" class="start-button">Next</a>
+            <a href="register.php" class="next-button">Next</a>
         </div>
     </div>
 </body>
