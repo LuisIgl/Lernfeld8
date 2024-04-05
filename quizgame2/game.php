@@ -250,7 +250,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
         </div>
         <div class="answers-container">
             <?php foreach($answers[$questions[$currentQuestion]['FragenNr']] as $answer): ?>
-                <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
+                <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : null; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : null; ?>, <?php echo $answer['AntwortenNr']; ?>)">
                     <?php echo $answer['Antwort']; ?>
                 </div>
             <?php endforeach; ?>
