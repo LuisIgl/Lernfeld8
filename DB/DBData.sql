@@ -1,45 +1,45 @@
 CREATE TABLE `quizduell`.`Account` (
-    `AccountNr` INT NOT NULL,
-    `Benutzername` TEXT NOT NULL,
-    `Passwort` TEXT NOT NULL,
+    `AccountNr` INT AUTO_INCREMENT NOT NULL,
+    `Benutzername` VARCHAR(255) NOT NULL,
+    `Passwort` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`AccountNr`)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `quizduell`.`Kategorie` (
     `KategorieNr` INT NOT NULL,
-    `Kategorie` TEXT NOT NULL,
+    `Kategorie` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`KategorieNr`)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `quizduell`.`Fragen` (
-    `FragenNr` INT NOT NULL,
-    `Frage` TEXT NOT NULL,
+    `FragenNr` INT AUTO_INCREMENT NOT NULL,
+    `Frage` VARCHAR(255) NOT NULL,
     `KategorieNr` INT NOT NULL,
     PRIMARY KEY (`FragenNr`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB, AUTO_INCREMENT=100;
 
 CREATE TABLE `quizduell`.`Antworten` (
-    `AntwortenNr` INT NOT NULL,
+    `AntwortenNr` INT AUTO_INCREMENT NOT NULL,
     `FragenNr` INT NOT NULL,
-    `Antwort` TEXT NOT NULL,
-    `Richtig` BOOLEAN NOT NULL,
+    `Antwort` VARCHAR(255) NOT NULL,
+    `Richtig` BOOLEAN NULL,
     PRIMARY KEY (`AntwortenNr`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB, AUTO_INCREMENT=500;
 
 USE quizduell;
 
-ALTER TABLE Antworten ADD FOREIGN KEY (FragenNr) REFERENCES Fragen (FragenNr);
+ALTER TABLE Antworten ADD FOREIGN KEY (FragenNr) REFERENCES Fragen (FragenNr) ON DELETE CASCADE;
 ALTER TABLE Fragen ADD FOREIGN KEY (KategorieNr) REFERENCES Kategorie (KategorieNr);
 
-INSERT INTO Account (AccountNr, Benutzername, Passwort) VALUES (001, 'admin', 'admin');
+INSERT INTO Account (Benutzername, Passwort) VALUES ('admin', 'admin');
 
 INSERT INTO Kategorie (KategorieNr, Kategorie) VALUES (1, 'Computerspiele');
 
 INSERT INTO Fragen (FragenNr, Frage, KategorieNr) VALUES (11, 'In welchem Jahr spielt das Spiel "Red Dead Redemption"?', 1);
 INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort, Richtig) VALUES (101, 11, '1911', true);
-INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort, Richtig) VALUES (102, 11, '1492', false);
-INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort, Richtig) VALUES (103, 11, '1875', false);
-INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort, Richtig) VALUES (104, 11, '1923', false);
+INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort) VALUES (102, 11, '1492');
+INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort) VALUES (103, 11, '1875');
+INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort) VALUES (104, 11, '1923');
 
 INSERT INTO Fragen (FragenNr, Frage, KategorieNr) VALUES (12, 'Was erscheint, wenn man einen zusätzlichen Lebenspilz bei Super Mario Bros. nimmt?', 1);
 INSERT INTO Antworten (AntwortenNr, FragenNr, Antwort, Richtig) VALUES (105, 12, '1 up', true);
