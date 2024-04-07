@@ -84,7 +84,9 @@
             <img src="static/img/logo.png" alt="Logo">
         </div>
         <h1>Retro-Quiz</h1>
-        <a href="register.php" class="start-button">Start</a>
+        <br>
+        <a href="register.php" class="start-button">Registrieren</a>
+        <a href="login.php" class="start-button">Login</a>
     </div>
 </body>
 </html>
