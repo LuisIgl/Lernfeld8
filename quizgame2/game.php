@@ -2,6 +2,9 @@
 require "database.php";
 session_start();
 
+$playerIndex = $_SESSION['player_index'] ?? 0; // 0 für den ersten Spieler, 1 für den zweiten Spieler
+$questionsPerPlayer = 3; // Anzahl der Fragen pro Spieler
+
 if(isset($_GET['category_name'])) {
     $category_name = $_GET['category_name'];
 
@@ -12,7 +15,11 @@ if(isset($_GET['category_name'])) {
     if($category) {
         $category_id = $category['KategorieNr'];
 
-        $statement_questions = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ?");
+        // Limit und Offset basierend auf dem Spielerindex und der Anzahl der Fragen pro Spieler berechnen
+        $limit = $questionsPerPlayer;
+        $offset = $playerIndex * $questionsPerPlayer;
+
+        $statement_questions = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ? LIMIT $limit OFFSET $offset");
         $statement_questions->execute([$category_id]);
 
         $questions = $statement_questions->fetchAll(PDO::FETCH_ASSOC);
@@ -37,7 +44,10 @@ if(isset($_GET['category_name'])) {
 }
 
 $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 0;
+
+// Hier kommt der restliche HTML- und PHP-Code deiner 'game.php', der sich nicht ändert.
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

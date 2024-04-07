@@ -158,7 +158,7 @@
         <form method="POST" action="login.php">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="login-button">Login</button>
+            <button type="submit" class="login-button">Anmelden</button>
         </form>
     </div>
     <?php if ($error): ?>
