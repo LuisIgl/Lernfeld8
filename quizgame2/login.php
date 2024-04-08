@@ -1,36 +1,37 @@
 <?php
 
-  require "database.php";
+require "database.php";
 
-  $error = null;
+$error = null;
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["username"]) || empty($_POST["password"])) {
-      $error = "Please fill all the fields.";
+        $error = "Please fill all the fields.";
     } else {
-      $statement = $conn->prepare("SELECT * FROM account WHERE username = :username LIMIT 1");
-      $statement->bindParam(":username", $_POST["username"]);
-      $statement->execute();
+        $statement = $conn->prepare("SELECT * FROM account WHERE username = :username LIMIT 1");
+        $statement->bindParam(":username", $_POST["username"]);
+        $statement->execute();
 
-      if ($statement->rowCount() == 0) {
-        $error = "Invalid credentials.";
-      } else {
-        $account = $statement->fetch(PDO::FETCH_ASSOC);
-
-        if (isset($account["username"]) && !password_verify($_POST["password"], $account["password"])) {
-          $error = "Invalid credentials.";
+        if ($statement->rowCount() == 0) {
+            $error = "Invalid credentials.";
         } else {
-          session_start();
+            $account = $statement->fetch(PDO::FETCH_ASSOC);
 
-          unset($account["password"]);
+            if (isset($account["username"]) && !password_verify($_POST["password"], $account["password"])) {
+                $error = "Invalid credentials.";
+            } else {
+                session_start();
 
-          $_SESSION["account"] = $account;
+                unset($account["password"]);
 
-          header("Location: home.php");
+                $_SESSION["account"] = $account;
+
+                header("Location: home.php");
+                exit();
+            }
         }
-      }
     }
-  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,46 +43,46 @@
     <link rel="stylesheet" href="./static/css/login-style.css">
 </head>
 <body>
-    <?php
+<?php
 
-    require "database.php";
+require "database.php";
 
-    try {
-        $query = "SELECT username, Punkte FROM Account ORDER BY Punkte DESC";
-        $statement = $conn->prepare($query);
-        $statement->execute();
+try {
+    $query = "SELECT username, Punkte FROM Account ORDER BY Punkte DESC";
+    $statement = $conn->prepare($query);
+    $statement->execute();
 
-        $players = $statement->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        die("Datenbankfehler: " . $e->getMessage());
-    }
+    $players = $statement->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Datenbankfehler: " . $e->getMessage());
+}
 
-    ?>
-    <div class="container">
-        <div class="logo">
-            <img src="static/img/logo.png" alt="Logo">
-        </div>
-        <h1>Retro-Quiz</h1>
-        <form method="POST" action="login.php">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="login-button">Anmelden</button>
-        </form>
+?>
+<div class="container">
+    <div class="logo">
+        <img src="static/img/logo.png" alt="Logo">
     </div>
-    <?php if ($error): ?>
-        <div class="error-container">
-            <div class="error-message">
-                <p><?= $error ?></p>
-            </div>
+    <h1>Retro-Quiz</h1>
+    <form method="POST" action="login.php">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit" class="login-button">Anmelden</button>
+    </form>
+</div>
+<?php if ($error): ?>
+    <div class="error-container">
+        <div class="error-message">
+            <p><?= $error ?></p>
         </div>
-    <?php endif ?>
-    <div class="sidebar">
+    </div>
+<?php endif ?>
+<div class="sidebar">
     <h2>Rangliste</h2>
     <hr>
     <br>
     <?php foreach ($players as $player): ?>
         <p><?php echo htmlspecialchars($player['username']); ?>: <?php echo $player['Punkte']; ?> Punkte</p>
     <?php endforeach; ?>
-    </div>
+</div>
 </body>
 </html>
