@@ -2,30 +2,35 @@
 require "database.php";
 session_start();
 
-$playerIndex = $_SESSION['player_index'] ?? 0; // 0 für den ersten Spieler, 1 für den zweiten Spieler
-$questionsPerPlayer = 3; // Anzahl der Fragen pro Spieler
+if (!isset($_SESSION['gameStarted']) || $_SESSION['gameStarted'] != true) {
+    $_SESSION['currentPoints'] = 0;
+    $_SESSION['gameStarted'] = true;
+}
 
-if(isset($_GET['category_name'])) {
+$currentPoints = isset($_SESSION['currentPoints']) ? $_SESSION['currentPoints'] : 0;
+
+if (isset($_SESSION['currentPoints']) && !isset($_SESSION['pointsUpdated'])) {
+    $_SESSION['pointsUpdated'] = true;
+    echo "<script>localStorage.setItem('currentPoints', '" . $_SESSION['currentPoints'] . "');</script>";
+}
+
+if (isset($_GET['category_name'])) {
     $category_name = $_GET['category_name'];
 
     $statement = $conn->prepare("SELECT * FROM kategorie WHERE Kategorie = ?");
     $statement->execute([$category_name]);
     $category = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if($category) {
+    if ($category) {
         $category_id = $category['KategorieNr'];
 
-        // Limit und Offset basierend auf dem Spielerindex und der Anzahl der Fragen pro Spieler berechnen
-        $limit = $questionsPerPlayer;
-        $offset = $playerIndex * $questionsPerPlayer;
-
-        $statement_questions = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ? LIMIT $limit OFFSET $offset");
+        $statement_questions = $conn->prepare("SELECT * FROM fragen WHERE KategorieNr = ?");
         $statement_questions->execute([$category_id]);
 
         $questions = $statement_questions->fetchAll(PDO::FETCH_ASSOC);
 
         $answers = array();
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $statement_answers = $conn->prepare("SELECT * FROM antworten WHERE FragenNr = ?");
             $statement_answers->execute([$question['FragenNr']]);
             $answers[$question['FragenNr']] = $statement_answers->fetchAll(PDO::FETCH_ASSOC);
@@ -45,7 +50,6 @@ if(isset($_GET['category_name'])) {
 
 $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 0;
 
-// Hier kommt der restliche HTML- und PHP-Code deiner 'game.php', der sich nicht ändert.
 ?>
 
 
@@ -53,31 +57,49 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 <html lang="en">
 <head>
 <script>
+
         var currentQuestion = <?php echo $currentQuestion; ?>;
         var totalQuestions = <?php echo $total_questions; ?>;
+        var currentPoints = getCurrentPoints();
+
+        function getCurrentPoints() {
+            return parseInt(localStorage.getItem('currentPoints')) || 0;
+        }
+
+        function updatePoints(points) {
+            localStorage.setItem('currentPoints', points);
+            document.getElementById('points').textContent = points;
+        }
+
+        window.onload = function() {
+            var currentPoints = getCurrentPoints();
+            document.getElementById('points').textContent = currentPoints;
+        };
 
         function selectAnswer(isCorrect, answerId) {
-            var pointsElement = document.getElementById('points');
-            var currentPoints = parseInt(pointsElement.textContent);
 
             if (isCorrect) {
-                currentPoints += 50;
+                currentPoints += 50; 
+                updatePoints(currentPoints);
             }
 
-            pointsElement.textContent = currentPoints;
+            var answerButtons = document.querySelectorAll('.answer');
+            answerButtons.forEach(function(button) {
+                button.onclick = null;
+            });
 
             var answerButtons = document.querySelectorAll('.answer');
             var selectedButton = document.getElementById('answer_' + answerId);
-            
+
             answerButtons.forEach(function(button) {
                 var isCorrectAnswer = button.getAttribute('data-correct') === '1';
-                
+
                 if (isCorrectAnswer) {
                     button.style.backgroundColor = '#00F562';
                 } else {
                     button.style.backgroundColor = '#FF3737';
                 }
-                
+
                 button.onclick = null;
             });
 
@@ -85,6 +107,8 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 
             if (currentQuestion < totalQuestions - 1) {
                 document.getElementById('next-button-container').style.display = 'block';
+            } else if (currentQuestion === totalQuestions - 1) {
+                document.getElementById('results-button-container').style.display = 'block';
             }
         }
 
@@ -108,7 +132,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
             var questionStatus = document.querySelector('.fragen');
             questionStatus.textContent = (currentQuestion + 1) + "/" + totalQuestions;
 
-            // Ocultar el botón Next si es la última pregunta
+            //////
             if (currentQuestion === totalQuestions - 1) {
                 document.getElementById('next-button-container').style.display = 'none';
             }
@@ -236,44 +260,52 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 </head>
 <body>
     <div class="main-container">
-    <div class="game-container">
-    <div class="logo">
-        <img src="static/img/logo.png" alt="Logo">
-    </div>
-    <div class="question-box" id="question-box">
-        <div class="question-status">
-            <div class="fragen"><?php echo ($currentQuestion + 1) . "/" . $total_questions; ?></div>
-
-            <div class="punkte" id="points">0</div>
-        </div>
-        <div class="category">
-            <?php
-                if(isset($_GET['category_name'])) {
-                    echo $_GET['category_name'];
-                } else {
-                    echo "Es wurde keine Kategorie ausgewählt.";
-                }
-            ?>
-        </div>
-        <div class="question">
-            <?php echo $questions[$currentQuestion]['Frage']; ?>
-        </div>
-        <div class="answers-container">
-            <?php foreach($answers[$questions[$currentQuestion]['FragenNr']] as $answer): ?>
-                <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : null; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : null; ?>, <?php echo $answer['AntwortenNr']; ?>)">
-                    <?php echo $answer['Antwort']; ?>
+        <div class="game-container">
+            <div class="logo">
+                <img src="static/img/logo.png" alt="Logo">
+            </div>
+            <div class="question-box" id="question-box">
+                <div class="question-status">
+                    <div class="fragen"><?php echo ($currentQuestion + 1) . "/" . $total_questions; ?></div>
+                    <div id="points"><?php echo $currentPoints . 'Punkte'; ?></div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</div>        
-        <div id="next-button-container" style="display: none;">
-                <?php if ($currentQuestion < $total_questions - 1): ?>
-                    <a href="game.php?category_name=<?php echo $category_name; ?>&currentQuestion=<?php echo $currentQuestion + 1; ?>" class="next-button">Next</a>
-                <?php else: ?>
-                    <span>Es gibt keine weitere Fragen.</span>
-                <?php endif; ?>
+                <div class="category">
+                    <?php
+                    if (isset($_GET['category_name'])) {
+                        echo $_GET['category_name'];
+                    } else {
+                        echo "Es wurde keine Kategorie ausgewählt.";
+                    }
+                    ?>
+                </div>
+                <div class="question-box" id="question-box">
+                    <div class="question">
+                        <?php echo $questions[$currentQuestion]['Frage']; ?>
+                    </div>
+                    <div class="answers-container">
+                        <?php foreach($answers[$questions[$currentQuestion]['FragenNr']] as $answer): ?>
+                            <div class="answer" id="answer_<?php echo $answer['AntwortenNr']; ?>" data-correct="<?php echo $answer['Richtig'] ? '1' : '0'; ?>" onclick="selectAnswer(<?php echo $answer['Richtig'] ? '1' : '0'; ?>, <?php echo $answer['AntwortenNr']; ?>)">
+                                <?php echo $answer['Antwort']; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <div id="next-button-container" style="display: <?php echo isset($_SESSION['lastQuestionCorrect']) ? ($_SESSION['lastQuestionCorrect'] ? 'block' : 'none') : 'none'; ?>;">
+                    <?php if ($currentQuestion < $total_questions - 1): ?>
+                        <a href="game.php?category_name=<?php echo $category_name; ?>&currentQuestion=<?php echo $currentQuestion + 1; ?>" class="next-button">Next</a>
+                    <?php endif; ?>
+                </div>
+                <div id="results-button-container" style="display: <?php echo $currentQuestion === $total_questions - 1 ? 'block' : 'none'; ?>">
+                    <?php
+                        echo '<div id="results-button-container">';
+                        echo '<p>Glückwunsch! Du hast alle Fragen beantwortet.</p>';
+                        echo '<br>';
+                        echo '<a href="results.php" class="next-button">Results</a>';
+                        echo '</div>';
+	                ?>
+                </div>
             </div>
         </div>
+    </div>
 </body>
 </html>
