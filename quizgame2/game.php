@@ -56,6 +56,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="./static/css/game-style.css">
 <script>
 
         var currentQuestion = <?php echo $currentQuestion; ?>;
@@ -136,153 +137,25 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
                 document.getElementById('next-button-container').style.display = 'none';
             }
         }
+        function toggleHelp() {
+            var popup = document.getElementById("help-popup");
+            popup.style.display = (popup.style.display === "block") ? "none" : "block";
+        }
+
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #EFCF5D;
-        }
-
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin: 0 auto;
-        }
-        .game-container {
-            text-align: center;
-            width: 35%;
-        }
-        .question-box {
-            background-color: #FAEDB7;
-            padding: 20px;
-            margin-bottom: 10%;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            -webkit-text-stroke: 1px black;
-        }
-        .category {
-            background-color: #2098BE;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            -webkit-text-stroke: 1px black;
-            width: 30%;
-            color: black;
-            border: 2px solid black;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            margin-top: 2%;
-            margin-bottom: 3%;
-            display: inline-block;
-        }
-
-        .sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            padding: 30px;
-            padding-top: 10px;
-            width: 25%;
-            height: 100%;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            background: rgba(255, 255, 255, 0.4);
-            z-index: 1; /* Unter dem Hauptcontainer */
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 10px;
-            font-size: 40px;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-        }
-
-        .answers-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 10px;
-            margin: 0 auto;
-            margin-bottom: 3%;
-            margin-top: 3%;
-            margin-left: 10%;
-        }
-
-        .answer {
-            width: 55%;
-            background-color: #F03986;
-            border: 2px solid #000;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 5px;
-            margin-top: 1%;
-            cursor: pointer;
-            font-size: 20px;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            -webkit-text-stroke: 1px black;
-        }
-        .answer:hover {
-            background-color: #f584b3;
-            color: black;
-            border-color: black;
-            cursor: pointer;
-        }
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 100px;
-        }
-        .logo img {
-            width: 150px;
-            height: 150px;
-        }
-        .question-status {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-        .punkte{
-          margin-right: 10px;
-        }
-        .fragen {
-          margin-left: 10px;
-        }
-
-        .next-button {
-            background-color: #ffe28a;
-            color: black;
-            border-top: 2px solid black;
-            border-bottom: 2px solid black;
-            border-left: 2px solid black;
-            border-right: 2px solid black;
-            border-radius: 30px;
-            padding: 10px 30px;
-            font-size: 25px;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: -2%;
-        }
-        .next-button:hover {
-            background-color: darkred;
-        }
-    </style>
+    <link rel="stylesheet" href="./static/css/game-style.css">
 </head>
 <body>
     <div class="main-container">
         <div class="game-container">
             <div class="logo">
             <a href="home.php" class="logo"><img src="static/img/logo.png" alt="Logo"></a>
+            </div>
+            <div class="help-icon">
+                <img src="static/img/help.png" alt="Help" onclick="toggleHelp()">
             </div>
             <div class="question-box" id="question-box">
                 <div class="question-status">
@@ -325,6 +198,15 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 	                ?>
                 </div>
             </div>
+        </div>
+    </div>
+    <div id="help-popup" class="help-popup">
+        <div class="help-content">
+            <span class="close-button" onclick="toggleHelp()">&times;</span>
+            <h3>Help</h3>
+            <p>Um auf jede Frage zu antworten, klicken Sie auf die Antwort,
+               die Sie für richtig halten. Nachdem Sie dies getan haben,
+               können Sie auf "Weiter" klicken, um zur nächsten Frage zu gelangen.</p>
         </div>
     </div>
     <div class="sidebar">
