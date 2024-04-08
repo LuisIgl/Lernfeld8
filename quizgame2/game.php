@@ -79,7 +79,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
         function selectAnswer(isCorrect, answerId) {
 
             if (isCorrect) {
-                currentPoints += 50; 
+                currentPoints += 50;
                 updatePoints(currentPoints);
             }
 
@@ -131,7 +131,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 
             var questionStatus = document.querySelector('.fragen');
             questionStatus.textContent = (currentQuestion + 1) + "/" + totalQuestions;
-		    
+
             if (currentQuestion === totalQuestions - 1) {
                 document.getElementById('next-button-container').style.display = 'none';
             }
@@ -176,13 +176,34 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
             width: 30%;
             color: black;
             border: 2px solid black;
-            border-radius: 5px; 
+            border-radius: 5px;
             padding: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin-top: 2%;
             margin-bottom: 3%;
             display: inline-block;
         }
+
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding: 30px;
+            padding-top: 10px;
+            width: 25%;
+            height: 100%;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1; /* Unter dem Hauptcontainer */
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+        }
+
         .answers-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -220,7 +241,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
             height: 100px;
         }
         .logo img {
-            width: 150px; 
+            width: 150px;
             height: 150px;
         }
         .question-status {
@@ -230,7 +251,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
             margin-bottom: 10px;
         }
         .punkte{
-          margin-right: 10px; 
+          margin-right: 10px;
         }
         .fragen {
           margin-left: 10px;
@@ -260,7 +281,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 <body>
     <div class="main-container">
         <div class="game-container">
-            div class="logo">
+            <div class="logo">
             <a href="home.php" class="logo"><img src="static/img/logo.png" alt="Logo"></a>
             </div>
             <div class="question-box" id="question-box">
@@ -305,6 +326,29 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
                 </div>
             </div>
         </div>
+    </div>
+    <div class="sidebar">
+    <?php
+
+    require "database.php";
+
+    try {
+        $query = "SELECT Username, Punkte FROM Account ORDER BY Punkte DESC";
+        $statement = $conn->prepare($query);
+        $statement->execute();
+
+        $players = $statement->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Datenbankfehler: " . $e->getMessage());
+    }
+
+    ?>
+    <h2>Rangliste</h2>
+    <hr>
+    <br>
+    <?php foreach ($players as $player): ?>
+        <p><?php echo htmlspecialchars($player['Username']); ?>: <?php echo $player['Punkte']; ?> Punkte</p>
+    <?php endforeach; ?>
     </div>
 </body>
 </html>

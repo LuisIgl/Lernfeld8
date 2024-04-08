@@ -44,7 +44,21 @@ $statement->execute();
             box-shadow: 20px 20px 50px -20px rgba(0,0,0,0.5);
             border: 2px solid rgba(0, 0, 0, 0.5); 
         }
-        
+
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding: 30px;
+            padding-top: 10px;
+            width: 25%;
+            height: 100%;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1; /* Unter dem Hauptcontainer */
+            text-align: center;
+        }
+
         h1 {
             margin-bottom: 10px;
             font-size: 50px;
@@ -52,7 +66,13 @@ $statement->execute();
             text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
             -webkit-text-stroke: 2px black;
         }
-        
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+        }
+
         .category {
             background-color: #F0E939;
             font-family: "Cabinet Grotesk Variable", sans-serif;
@@ -130,6 +150,29 @@ $statement->execute();
             }
         }
     ?>
+    </div>
+    <div class="sidebar">
+    <?php
+
+    require "database.php";
+
+    try {
+        $query = "SELECT Username, Punkte FROM Account ORDER BY Punkte DESC";
+        $statement = $conn->prepare($query);
+        $statement->execute();
+
+        $players = $statement->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Datenbankfehler: " . $e->getMessage());
+    }
+
+    ?>
+    <h2>Rangliste</h2>
+    <hr>
+    <br>
+    <?php foreach ($players as $player): ?>
+        <p><?php echo htmlspecialchars($player['Username']); ?>: <?php echo $player['Punkte']; ?> Punkte</p>
+    <?php endforeach; ?>
     </div>
 </body>
 </html>

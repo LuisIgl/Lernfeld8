@@ -14,6 +14,7 @@
             align-items: center;
             height: 100vh;
             background-color: #EFCF5D;
+            position: relative; /* Hinzugefügt */
         }
         * {
             font-size: 24px;
@@ -27,6 +28,20 @@
             background: white;
             box-shadow: 20px 20px 50px -20px rgba(0,0,0,0.5);
             border: 2px solid rgba(0, 0, 0, 0.5);
+            z-index: 2; /* Stellt sicher, dass der Container über dem Seitenbereich liegt */
+        }
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            padding: 30px;
+            padding-top: 10px;
+            width: 25%;
+            height: 100%;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1; /* Unter dem Hauptcontainer */
+            text-align: center;
         }
         
         h1 {
@@ -36,6 +51,13 @@
             text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
             -webkit-text-stroke: 2px black;
         }
+
+        h2 {
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-family: "Cabinet Grotesk Variable", sans-serif;
+        }
+
         .start-button {
             background-color: #FF3737;
             color: black;
@@ -79,6 +101,21 @@
     </style>
 </head>
 <body>
+    <?php
+
+    require "database.php";
+
+    try {
+        $query = "SELECT Username, Punkte FROM Account ORDER BY Punkte DESC";
+        $statement = $conn->prepare($query);
+        $statement->execute();
+
+        $players = $statement->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        die("Datenbankfehler: " . $e->getMessage());
+    }
+
+    ?>
     <div class="container">
         <div class="logo">
             <img src="static/img/logo.png" alt="Logo">
@@ -87,7 +124,14 @@
         <br>
         <a href="register.php" class="start-button">Registrieren</a>
         <a href="login.php" class="start-button">Anmelden</a>
-    
+    </div>
+    <div class="sidebar">
+    <h2>Rangliste</h2>
+    <hr>
+    <br>
+    <?php foreach ($players as $player): ?>
+        <p><?php echo htmlspecialchars($player['Username']); ?>: <?php echo $player['Punkte']; ?> Punkte</p>
+    <?php endforeach; ?>
     </div>
 </body>
 </html>
