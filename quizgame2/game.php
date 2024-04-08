@@ -260,8 +260,8 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 <body>
     <div class="main-container">
         <div class="game-container">
-            <div class="logo">
-                <img src="static/img/logo.png" alt="Logo">
+            div class="logo">
+            <a href="home.php" class="logo"><img src="static/img/logo.png" alt="Logo"></a>
             </div>
             <div class="question-box" id="question-box">
                 <div class="question-status">
