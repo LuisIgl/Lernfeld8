@@ -26,7 +26,7 @@ jobs:
       - name: Check syntax with PHP Lint
         run: find . -name '*.php' -exec php -l {} \;
 
-      - name: Install PHP CodeSniffer
+      - name: Install PHP CodeSniffer and PHPCBF
         run: |
           curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
           curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
