@@ -25,3 +25,6 @@ jobs:
 
     - name: Check coding standards with PHP_CodeSniffer
       run: php phpcs.phar --standard=PSR12 ./
+
+    - name: Fix coding standards with PHP_CodeSniffer
+      run: php phpcbf.phar --standard=PSR12 ./
