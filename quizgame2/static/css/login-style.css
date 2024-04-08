@@ -110,7 +110,7 @@ input::placeholder {
     justify-content: center;
 }
 .error-message {
-    background-color: 	 #ee4466;
+    background-color: #ee4466;
     border: 2px solid black;
     float: left;
     padding: 20px 30px;
