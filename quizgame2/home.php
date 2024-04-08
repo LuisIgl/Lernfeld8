@@ -9,7 +9,7 @@ $statement->execute();
 ?>
 
 <script>
-        localStorage.removeItem('currentPoints');
+    localStorage.removeItem('currentPoints');
 </script>
 
 <!DOCTYPE html>
@@ -21,26 +21,26 @@ $statement->execute();
     <link rel="stylesheet" href="./static/css/home-style.css">
 </head>
 <body>
-    <div class="logo">
-        <img src="static/img/logo.png" alt="Logo">
-    </div>
-    <div class="container">
-        <h1>Hi, <?php print_r($_SESSION["account"]["Username"]);?></h1>
-        <div class="category">Choose your category</div>
-    </div>
-    <div class="button-container">
+<div class="logo">
+    <img src="static/img/logo.png" alt="Logo">
+</div>
+<div class="container">
+    <h1>Hi, <?php print_r($_SESSION["account"]["Username"]); ?></h1>
+    <div class="category">Choose your category</div>
+</div>
+<div class="button-container">
     <?php
-        if ($statement->rowCount() == 0) {
-            echo "keine Kategorien verfügbar.";
-        } else {
-            while ($categories = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $categoryName = $categories['Kategorie'];
-                echo "<a href='game.php?category_name=$categoryName'><div class='button'>$categoryName</div></a>";
-            }
+    if ($statement->rowCount() == 0) {
+        echo "keine Kategorien verfügbar.";
+    } else {
+        while ($categories = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $categoryName = $categories['Kategorie'];
+            echo "<a href='game.php?category_name=$categoryName'><div class='button'>$categoryName</div></a>";
         }
+    }
     ?>
-    </div>
-    <div class="sidebar">
+</div>
+<div class="sidebar">
     <?php
 
     require "database.php";
@@ -62,6 +62,6 @@ $statement->execute();
     <?php foreach ($players as $player): ?>
         <p><?php echo htmlspecialchars($player['Username']); ?>: <?php echo $player['Punkte']; ?> Punkte</p>
     <?php endforeach; ?>
-    </div>
+</div>
 </body>
 </html>
