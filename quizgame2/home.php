@@ -8,6 +8,10 @@ $statement->execute();
 
 ?>
 
+<script>
+        localStorage.removeItem('currentPoints');
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
