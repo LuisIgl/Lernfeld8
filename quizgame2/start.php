@@ -87,9 +87,7 @@
         <br>
         <a href="register.php" class="start-button">Registrieren</a>
         <a href="login.php" class="start-button">Anmelden</a>
-        <br>
-        <br>
-        <a href="multiplayer.php" class="start-button">Mehrspielermodus</a>
+    
     </div>
 </body>
 </html>
