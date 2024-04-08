@@ -31,7 +31,7 @@ if (isset($_GET['category_name'])) {
 
         $answers = array();
         foreach ($questions as $question) {
-            $statement_answers = $conn->prepare("SELECT * FROM antworten WHERE FragenNr = ?");
+            $statement_answers = $conn->prepare("SELECT * FROM antworten WHERE FragenNr = ? ORDER BY RAND() LIMIT 4");
             $statement_answers->execute([$question['FragenNr']]);
             $answers[$question['FragenNr']] = $statement_answers->fetchAll(PDO::FETCH_ASSOC);
         }
