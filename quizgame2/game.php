@@ -9,10 +9,7 @@ if (!isset($_SESSION['gameStarted']) || $_SESSION['gameStarted'] != true) {
 
 $currentPoints = isset($_SESSION['currentPoints']) ? $_SESSION['currentPoints'] : 0;
 
-if (isset($_SESSION['currentPoints']) && !isset($_SESSION['pointsUpdated'])) {
-    $_SESSION['pointsUpdated'] = true;
-    echo "<script>localStorage.setItem('currentPoints', '" . $_SESSION['currentPoints'] . "');</script>";
-}
+
 
 if (isset($_GET['category_name'])) {
     $category_name = $_GET['category_name'];
@@ -89,7 +86,6 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
                 button.onclick = null;
             });
 
-            var answerButtons = document.querySelectorAll('.answer');
             var selectedButton = document.getElementById('answer_' + answerId);
 
             answerButtons.forEach(function(button) {
