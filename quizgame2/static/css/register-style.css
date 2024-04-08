@@ -7,9 +7,11 @@ body {
     height: 100vh;
     background-color: #EFCF5D;
 }
+
 * {
     font-size: 24px;
 }
+
 .container {
     position: relative;
     text-align: center;
@@ -62,13 +64,15 @@ h2 {
     font-family: "Cabinet Grotesk Variable", sans-serif;
     cursor: pointer;
     font-weight: bold;
-    text-decoration: none; 
-    display: inline-block; 
+    text-decoration: none;
+    display: inline-block;
     margin-top: 20px;
 }
+
 .register-button:hover {
     background-color: darkred;
 }
+
 .logo {
     position: absolute;
     top: -120px;
@@ -78,6 +82,7 @@ h2 {
     height: 200px;
     border-radius: 50%;
 }
+
 .logo img {
     position: absolute;
     top: 50%;
@@ -87,6 +92,7 @@ h2 {
     height: 200px;
     object-fit: cover;
 }
+
 input[type="text"],
 input[type="password"] {
     width: 70%;
@@ -97,9 +103,11 @@ input[type="password"] {
     box-sizing: border-box;
     font-size: 20px;
 }
+
 input::placeholder {
     font-size: 16px;
 }
+
 .error-container {
     position: absolute;
     bottom: 20%;
@@ -107,14 +115,16 @@ input::placeholder {
     display: flex;
     justify-content: center;
 }
+
 .error-message {
-    background-color: 	 #ee4466;
+    background-color: #ee4466;
     border: 2px solid black;
     float: left;
     padding: 20px 30px;
     top: 80%;
     text-align: center;
 }
+
 .error-message p {
     color: black;
     font-family: "Cabinet Grotesk Variable", sans-serif;
