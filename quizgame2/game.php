@@ -131,8 +131,7 @@ $currentQuestion = isset($_GET['currentQuestion']) ? $_GET['currentQuestion'] : 
 
             var questionStatus = document.querySelector('.fragen');
             questionStatus.textContent = (currentQuestion + 1) + "/" + totalQuestions;
-
-            //////
+		    
             if (currentQuestion === totalQuestions - 1) {
                 document.getElementById('next-button-container').style.display = 'none';
             }
