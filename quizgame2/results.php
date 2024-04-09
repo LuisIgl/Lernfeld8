@@ -65,6 +65,7 @@ if ($playerUsername) {
                             <figcaption>Du bist unter den ersten 10 Spielern die sich angemeldet haben!</figcaption> <!-- Hier deinen Untertitel einfügen -->
                         </figure>
                     </div>
+                    <a href="home.php" class="home-button">Home</a>
                 </div>
             </div>
         </div>
