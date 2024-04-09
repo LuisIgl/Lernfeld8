@@ -198,7 +198,7 @@ function toggleHelp() {
         <h3>Hilfe</h3>
         <p>Um auf jede Frage zu antworten, klicken Sie auf die Antwort,
            die Sie für richtig halten. Nachdem Sie dies getan haben,
-           können Sie auf "Weiter" klicken, um zur nächsten Frage zu gelangen.</p>
+           können Sie auf "Next" klicken, um zur nächsten Frage zu gelangen.</p>
     </div>
 </div>
 <div class="sidebar">
