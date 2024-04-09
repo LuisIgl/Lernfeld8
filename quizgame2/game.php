@@ -185,8 +185,6 @@ function toggleHelp() {
             <div id="results-button-container" style="display: <?php echo $currentQuestion === $total_questions - 1 ? 'block' : 'none'; ?>">
                 <?php
                     echo '<div id="results-button-container">';
-                    echo '<p>Glückwunsch! Du hast alle Fragen beantwortet.</p>';
-                    echo '<br>';
                     echo '<a href="results.php" class="next-button">Results</a>';
                     echo '</div>';
                 ?>
@@ -197,7 +195,7 @@ function toggleHelp() {
 <div id="help-popup" class="help-popup">
     <div class="help-content">
         <span class="close-button" onclick="toggleHelp()">&times;</span>
-        <h3>Help</h3>
+        <h3>Hilfe</h3>
         <p>Um auf jede Frage zu antworten, klicken Sie auf die Antwort,
            die Sie für richtig halten. Nachdem Sie dies getan haben,
            können Sie auf "Weiter" klicken, um zur nächsten Frage zu gelangen.</p>

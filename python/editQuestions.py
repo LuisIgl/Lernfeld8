@@ -8,7 +8,7 @@ def create_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            database='quizduell',
+            database='quiz_game',
             user='admin',  # Ändern Sie dies zu Ihrem MariaDB-Benutzernamen
             password=getpass('Enter database password: ')  # Sicherer Weg, das Passwort abzufragen
         )
