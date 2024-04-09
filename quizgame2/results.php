@@ -30,6 +30,40 @@ if ($playerUsername) {
     }
 }
 
+if ($playerUsername) {
+    try {
+        $query = "SELECT Punkte FROM Account WHERE Username = :username";
+        $statement = $conn->prepare($query);
+        $statement->bindParam(':username', $playerUsername);
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            $points = (int)$result['Punkte']; // Konvertiere das Ergebnis in einen Integer für den Vergleich
+
+            // Nutze die $points Variable für die Bedingungen
+            if ($points >= 1000) {
+                $points1000 = "static/achievements/1000points.png";
+            } else {
+                $points1000 = "static/achievements/n1000points.png";
+            }
+            if ($points >= 100) {
+                $points100 = "static/achievements/100points.png"; // Pfad muss korrekt sein
+            } else {
+                $points100 = "static/achievements/n100points.png"; // Pfad muss korrekt sein
+            }
+            if ($points >= 500) {
+                $points500 = "static/achievements/500points.png"; // Pfad muss korrekt sein
+            } else {
+                $points500 = "static/achievements/n500points.png"; // Pfad muss korrekt sein
+            }
+        }
+    } catch (PDOException $e) {
+        die("Datenbankfehler: " . $e->getMessage());
+    }
+}
+
+
 ?>
 
 <script>
@@ -61,11 +95,18 @@ if ($playerUsername) {
                             <figcaption>Du bist unter den ersten 10 Spielern die sich angemeldet haben!</figcaption> <!-- Hier deinen Untertitel einfügen -->
                         </figure>
                         <figure>
-                            <img src="<?php echo htmlspecialchars($Top10); ?>" alt="Top 10 Achievement">
-                            <figcaption>Du bist unter den ersten 10 Spielern die sich angemeldet haben!</figcaption> <!-- Hier deinen Untertitel einfügen -->
+                            <img src="<?php echo htmlspecialchars($points100); ?>" alt="100 Punkte">
+                            <figcaption>Du hast mehr als 100 Punkte erreicht!</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="<?php echo htmlspecialchars($points500); ?>" alt="500 Punkte">
+                            <figcaption>Du hast mehr als 500 Punkte erreicht!</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="<?php echo htmlspecialchars($points1000); ?>" alt="1000 Punkte">
+                            <figcaption>Du hast mehr als 1000 Punkte erreicht!</figcaption>
                         </figure>
                     </div>
-                    <a href="home.php" class="home-button">Home</a>
                 </div>
             </div>
         </div>
