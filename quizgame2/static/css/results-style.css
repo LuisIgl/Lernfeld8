@@ -1,113 +1,135 @@
 body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #EFCF5D;
-            position: relative; /* Hinzugefügt */
-        }
-        * {
-            font-size: 24px;
-        }
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #EFCF5D;
+    position: relative; /* Hinzugefügt */
+}
+* {
+    font-size: 24px;
+}
 
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            margin: 0 auto;
-        }
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
 
-        .game-container {
-            text-align: center;
-            width: 35%;
-        }
+.game-container {
+    text-align: center;
+    width: 35%;
+}
 
-        .container {
-            text-align: center;
-            border-radius: 50px;
-            padding: 30px;
-            width: 500px;
-            background: white;
-            box-shadow: 20px 20px 50px -20px rgba(0,0,0,0.5);
-            border: 2px solid rgba(0, 0, 0, 0.5);
-            z-index: 2; /* Stellt sicher, dass der Container über dem Seitenbereich liegt */
-        }
-        .sidebar {
-            position: fixed;
-            right: 0;
-            top: 0;
-            padding: 30px;
-            padding-top: 10px;
-            width: 25%;
-            height: 100%;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            background: rgba(255, 255, 255, 0.4);
-            z-index: 1; /* Unter dem Hauptcontainer */
-            text-align: center;
-        }
+.container {
+    text-align: center;
+    border-radius: 50px;
+    padding: 30px;
+    width: 500px;
+    background: white;
+    box-shadow: 20px 20px 50px -20px rgba(0,0,0,0.5);
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    z-index: 2; /* Stellt sicher, dass der Container über dem Seitenbereich liegt */
+}
+.sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 30px;
+    padding-top: 10px;
+    width: 25%;
+    height: 100%;
+    font-family: "Cabinet Grotesk Variable", sans-serif;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 1; /* Unter dem Hauptcontainer */
+    text-align: center;
+}
 
-        .result {
-            position: fixed;
-            right: 30%;
-            top: 7%;
-            padding: 30px;
-            padding-top: 15px;
-            width: 50%;
-            height: 70%;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            background: rgba(255, 255, 255, 0.6);
-            border: 2px solid rgba(0, 0, 0, 0.5);
-        }
+.result {
+    position: fixed;
+    right: 30%;
+    top: 7%;
+    padding: 30px;
+    padding-top: 15px;
+    width: 50%;
+    height: 70%;
+    font-family: "Cabinet Grotesk Variable", sans-serif;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.5);
+}
 
-        .achievements-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px; /* Abstand zwischen den Elementen */
-        }
+.achievements-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Abstand zwischen den Elementen */
+}
 
-        .achievements-container img {
-            width: 150px; /* Breite der Achievements-Bilder */
-            height: auto; /* Höhe automatisch anpassen */
-        }
+.achievements-container img {
+    width: 150px; /* Breite der Achievements-Bilder */
+    height: auto; /* Höhe automatisch anpassen */
+}
 
-        figure {
-            width: 180px;
-        }
+figure {
+    width: 180px;
+}
 
-        figcaption {
-            font-size: 15px;
-        }
+figcaption {
+    font-size: 15px;
+}
 
-        h1 {
-            margin-bottom: 10px;
-            font-size: 50px;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
-            -webkit-text-stroke: 2px black;
-        }
+h1 {
+    margin-bottom: 10px;
+    font-size: 50px;
+    font-family: "Cabinet Grotesk Variable", sans-serif;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+    -webkit-text-stroke: 2px black;
+}
 
-        h2 {
-            margin-bottom: 10px;
-            font-size: 40px;
-            font-family: "Cabinet Grotesk Variable", sans-serif;
-        }
+h2 {
+    margin-bottom: 10px;
+    font-size: 40px;
+    font-family: "Cabinet Grotesk Variable", sans-serif;
+}
 
-        a {
-          text-decoration: none;
-        }
+a {
+  text-decoration: none;
+}
 
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 100px;
-        }
-        .logo img {
-            width: 150px;
-            height: 150px;
-        }
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 100px;
+}
+.logo img {
+    width: 150px;
+    height: 150px;
+}
+.home-button {
+    background-color: #00F562;
+    color: black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-size: 25px;
+    font-family: "Cabinet Grotesk Variable", sans-serif;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.home-button:hover {
+    background-color: darkred;
+}
+
